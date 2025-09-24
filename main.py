@@ -6,8 +6,6 @@ app = FastAPI(title="Wallet API")
 app.include_router(wallets_router, prefix="/api/v1")
 
 
-async def startup_event():
-    await check_db_connection()
-app.add_event_handler("startup", startup_event)
+app.add_event_handler("startup", check_db_connection)
 
 # стартуем !!! uvicorn main:app --reload

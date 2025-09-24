@@ -50,7 +50,7 @@ async def check_db_connection():
                 return inspector.get_table_names()
 
             tables = await conn.run_sync(get_tables)
-            print("✅ База на базе. С такими таблицами:", tables)
+            print("✅ База. С такими таблицами:", tables)
     except Exception as e:
-        print("❌ Я базу не вижу, дальше не поеду:", e)
+        print("❌ нет базы", e)
         raise e
