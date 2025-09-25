@@ -6,8 +6,8 @@ REST API для управления балансами кошельков.
 
 Для Проверяющего:
 
-1️⃣docker-compose up --build
-2️⃣docker-compose run --rm wallet_api pytest -v
+1️⃣docker compose up --build
+2️⃣docker compose run --rm wallet_api pytest -v
 
 http://localhost:8000/docs
 
