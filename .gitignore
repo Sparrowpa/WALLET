@@ -2,8 +2,7 @@
 .venv/
 venv/
 
-# Секреты и конфиги
-.env
+
 
 # Python кеши
 __pycache__/
