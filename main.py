@@ -8,4 +8,4 @@ app.include_router(wallets_router, prefix="/api/v1")
 
 app.add_event_handler("startup", check_db_connection)
 
-# стартуем !!! uvicorn main:app --reload
+# start !!! uvicorn main:app --reload

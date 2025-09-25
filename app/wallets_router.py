@@ -8,7 +8,7 @@ from .config import async_session
 wallets_router = APIRouter()
 
 
-# Создание нового кошелька
+# Create a new wallet
 @wallets_router.post("/wallets/new")
 async def create_new_wallet():
     async with async_session() as session:
@@ -16,7 +16,7 @@ async def create_new_wallet():
         return {"wallet_id": str(wallet.id), "balance": wallet.balance}
 
 
-# Получение баланса кошелька
+# Get wallet balance
 @wallets_router.get("/wallets/{wallet_id}")
 async def get_balance(wallet_id: str):
     async with async_session() as session:
@@ -33,17 +33,17 @@ async def get_balance(wallet_id: str):
             raise HTTPException(status_code=500, detail="Internal server error")
 
 
-# Депозит/снятие
+# Deposit / Withdraw
 @wallets_router.post("/wallets/{wallet_id}/operation")
 async def wallet_operation(
-        wallet_id: str,
-        operation_type: OperationType,
-        amount: Decimal
+    wallet_id: str, operation_type: OperationType, amount: Decimal
 ):
     async with async_session() as session:
-        new_balance = await process_transaction(session, wallet_id, amount, operation_type)
+        new_balance = await process_transaction(
+            session, wallet_id, amount, operation_type
+        )
 
         return {
             "wallet_id": wallet_id,
-            "new_balance": new_balance  # Просто возвращаем новый баланс
+            "new_balance": new_balance,  # Just return the new balance
         }
