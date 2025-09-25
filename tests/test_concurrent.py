@@ -7,7 +7,7 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 
 
-DATABASE_URL = "postgresql+asyncpg://user:password@localhost:5432/wallet_db"
+DATABASE_URL = "postgresql+asyncpg://user:password@db:5432/wallet_db"
 
 # async engine
 engine = create_async_engine(DATABASE_URL, future=True, echo=False)
@@ -20,7 +20,7 @@ AsyncSessionLocal = async_sessionmaker(
 
 @pytest_asyncio.fixture
 async def client():
-    async with httpx.AsyncClient(base_url="http://localhost:8000") as ac:
+    async with httpx.AsyncClient(base_url="http://wallet_api:8000") as ac:
         yield ac
 
 

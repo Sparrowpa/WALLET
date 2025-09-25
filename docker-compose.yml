@@ -8,5 +8,17 @@ services:
       - "${POSTGRES_PORT}:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+
+  wallet_api:
+    build: .
+    container_name: wallet_api
+    env_file:
+      - .env
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    command: bash -c "echo '⏳ Waiting for database'; sleep 10; alembic upgrade head; uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+
 volumes:
   db_data:
