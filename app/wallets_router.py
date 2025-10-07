@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+from sqlalchemy import select
 from decimal import Decimal
 from uuid import UUID
 from .wallets_transaction import create_wallet, process_transaction
@@ -47,3 +48,38 @@ async def wallet_operation(
             "wallet_id": wallet_id,
             "new_balance": new_balance,  # Just return the new balance
         }
+
+# Get all wallets (READ ALL)
+@wallets_router.get("/wallets")
+async def get_all_wallets():
+    async with async_session() as session:
+        try:
+            result = await session.execute(select(Wallet))
+            wallets = [{"wallet_id": str(w.id), "balance": w.balance} for w in result.scalars()]
+            return wallets
+        except Exception as e:
+            print(f"Error fetching wallets: {e}")
+            raise HTTPException(status_code=500, detail="Internal server error")
+
+# Delete a wallet (DELETE)
+@wallets_router.delete("/wallets/{wallet_id}")
+async def delete_wallet(wallet_id: str):
+    # Проверяем корректность UUID
+    try:
+        wallet_uuid = UUID(wallet_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid wallet ID format")
+
+    async with async_session() as session:
+        wallet = await session.get(Wallet, wallet_uuid)
+        if wallet is None:
+            raise HTTPException(status_code=404, detail="Wallet not found")
+
+        try:
+            await session.delete(wallet)
+            await session.commit()
+        except Exception as e:
+            print(f"Error deleting wallet: {e}")
+            raise HTTPException(status_code=500, detail="Internal server error")
+
+        return {"detail": f"Wallet {wallet_id} deleted successfully"}
